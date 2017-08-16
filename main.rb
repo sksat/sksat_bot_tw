@@ -26,6 +26,30 @@ def save_yaml
 end
 
 load_yaml
+
+stream = TweetStream::Client.new
+
+begin
+	stream.userstream{|status|
+		text = status.text
+		next if(text=~/^RT/)
+		if text.include?("千種夜羽") || text.include?("よはねす")
+			tc.update(("@" + status.user.screen_name + "呼びましたか？"), :in_reply_to_status_id => status.id)
+		end
+	}
+rescue => e
+	puts e.message
+	retry
+end
+
+=begin
+TweetStream::Client.new.track('千種夜羽','よはねす','ヨハネス') do |status|
+	next unless status.lang == "ja"
+	puts "#{status.user.screen_name} #{status.text}"
+end
+=end
+
+=begin
 while true do
 	tweet = tc.search("千種夜羽").first
 	if tweet.id != $t_id
@@ -48,3 +72,4 @@ while true do
 	save_yaml
 	sleep 5
 end
+=end

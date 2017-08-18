@@ -1,3 +1,5 @@
 secret.yml
 .bundle
 Gemfile.lock
+ruby
+nohup.out

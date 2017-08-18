@@ -1,11 +1,12 @@
 #!/usr/bin/ruby
+require 'date'
 require 'yaml'
 load 'client.rb'
 
 twitter_client = TwitterClient.new
 
 tc = twitter_client.getClient
-tc.update "起動中..."
+tc.update "起動中..." + DateTime.now.to_s
 
 $t_id = 0
 $yohanesu_num = 0
@@ -33,7 +34,12 @@ begin
 	stream.userstream{|status|
 		text = status.text
 		next if(text=~/^RT/)
+		next if(status.user.id == 876273884563030018)
 		if text.include?("千種夜羽") || text.include?("よはねす")
+			tc.update(("@" + status.user.screen_name + "わたし千種夜羽！"), :in_reply_to_status_id => status.id)
+		elsif text.include?("しーまぎょ")
+			tc.update(("@"+status.user.screen_name + "（ヽ *ﾟ▽ﾟ*）ノわーい！ しーまぎょが泳ぐよ！ ( *ﾟ▽ﾟ* っ)З ==3"), :in_reply_to_status_id => status.id)
+		elsif text.include?("@sksat_bot")
 			tc.update(("@" + status.user.screen_name + "呼びましたか？"), :in_reply_to_status_id => status.id)
 		end
 	}

@@ -39,6 +39,21 @@ begin
 			tc.update(("@" + status.user.screen_name + "わたし千種夜羽！"), :in_reply_to_status_id => status.id)
 		elsif text.include?("しーまぎょ")
 			tc.update(("@"+status.user.screen_name + "（ヽ *ﾟ▽ﾟ*）ノわーい！ しーまぎょが泳ぐよ！ ( *ﾟ▽ﾟ* っ)З ==3"), :in_reply_to_status_id => status.id)
+		elsif text.include?("asm")
+			m = text.match(/asm:(.+)/)
+			if m != nil
+				asm = m[1]
+				r_text=""
+				if asm.include?("\"")
+					r_text = "ざんねんでした"
+				else
+					r_text = %x[rasm2 "#{asm}"]
+					if r_text == ""
+						r_text = "error."
+					end
+				end
+				tc.update(("@" + status.user.screen_name + " " + r_text), :in_reply_to_status_id => status.id)
+			end
 		elsif text.include?("@sksat_bot")
 			tc.update(("@" + status.user.screen_name + "呼びましたか？"), :in_reply_to_status_id => status.id)
 		end

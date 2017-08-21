@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 require 'date'
 require 'yaml'
+require 'shellwords'
 load 'client.rb'
 
 twitter_client = TwitterClient.new
@@ -47,7 +48,7 @@ begin
 				if asm.include?("\"")
 					r_text = "ざんねんでした"
 				else
-					r_text = %x[rasm2 "#{asm}"]
+					r_text = %x[rasm2 "#{Shellwords.escape(asm)}"]
 					if r_text == ""
 						r_text = "error."
 					end

@@ -48,7 +48,7 @@ begin
 				if asm.include?("\"")
 					r_text = "ざんねんでした"
 				else
-					r_text = %x[rasm2 "#{Shellwords.escape(asm)}"]
+					r_text = %x[rasm2 #{Shellwords.escape(asm)}]
 					if r_text == ""
 						r_text = "error."
 					end

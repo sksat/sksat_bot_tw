@@ -1,4 +1,5 @@
 secret.yml
+data.yml
 .bundle
 Gemfile.lock
 ruby

@@ -40,14 +40,14 @@ stream.on_direct_message do |dm|
 end
 
 stream.on_event(:favorite) do |fav|
-	p fav
-	tc.update("fav", :in_reply_to_status_id => fav[:target_object][:id])
+	#p fav
+	#tc.update("fav", :in_reply_to_status_id => fav[:target_object][:id])
 end
 
 stream.on_event(:follow) do |follow|
 	#p follow
 	if(follow[:target][:id] == 876273884563030018)
-		msg = "followed by "+follow[:source][:name]
+		msg = "followed by "+follow[:source][:name]+"( @"+follow[:source][:screen_name]+" )"
 		puts msg
 		tc.update msg
 		tc.follow follow[:source][:id]

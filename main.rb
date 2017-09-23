@@ -31,38 +31,66 @@ load_yaml
 
 stream = TweetStream::Client.new
 
-begin
-	stream.userstream{|status|
-		text = status.text
-		next if(text=~/^RT/)
-		next if(status.user.id == 876273884563030018)
-		if text.include?("千種夜羽") || text.include?("よはねす")
-			tc.update(("@" + status.user.screen_name + "わたし千種夜羽！"), :in_reply_to_status_id => status.id)
-		elsif text.include?("しーまぎょ")
-			tc.update(("@"+status.user.screen_name + "（ヽ *ﾟ▽ﾟ*）ノわーい！ しーまぎょが泳ぐよ！ ( *ﾟ▽ﾟ* っ)З ==3"), :in_reply_to_status_id => status.id)
-		elsif text.include?("asm")
-			m = text.match(/asm:(.+)/)
-			if m != nil
-				asm = m[1]
-				r_text=""
-				if asm.include?("\"")
-					r_text = "ざんねんでした"
-				else
-					r_text = %x[rasm2 #{Shellwords.escape(asm)}]
-					if r_text == ""
-						r_text = "error."
-					end
-				end
-				tc.update(("@" + status.user.screen_name + " " + r_text), :in_reply_to_status_id => status.id)
-			end
-		elsif text.include?("@sksat_bot")
-			tc.update(("@" + status.user.screen_name + "呼びましたか？"), :in_reply_to_status_id => status.id)
-		end
-	}
-rescue => e
-	puts e.message
-	retry
+stream.on_error do |msg|
+	puts msg
 end
+
+stream.on_direct_message do |dm|
+	puts dm.text
+end
+
+stream.on_event(:favorite) do |fav|
+	p fav
+	tc.update("fav", :in_reply_to_status_id => fav[:target_object][:id])
+end
+
+stream.on_event(:follow) do |follow|
+	#p follow
+	if(follow[:target][:id] == 876273884563030018)
+		msg = "followed by "+follow[:source][:name]
+		puts msg
+		tc.update msg
+		tc.follow follow[:source][:id]
+	end
+end
+
+stream.on_timeline_status do |status|
+	#puts status.text
+	text = status.text
+	user = status.user
+	next if(text=~/^RT/)
+	next if(user.id == 876273884563030018)
+	if text.include?("千種夜羽") || text.include?("よはねす") || text.include?("ヨハネス")
+		msg = "はーい，霞くんと明日葉ちゃんの大好きなお母さん，正義のヨハネスさんですよ〜"
+		if(user.id == 730341017736470528)
+			$yohanesu_num+=1
+			save_yaml
+			msg += "\nちなみにわたしの名前を呼んだのは"+$yohanesu_num.to_s+"回目ですね．"
+		end
+		tc.update(("@" + user.screen_name + msg), :in_reply_to_status_id => status.id)
+	elsif text.include?("しーまぎょ")
+		tc.update(("@"+user.screen_name + "（ヽ *ﾟ▽ﾟ*）ノわーい！ しーまぎょが泳ぐよ！ ( *ﾟ▽ﾟ* っ)З ==3"), :in_reply_to_status_id => status.id)
+	elsif text.include?("asm")
+		m = text.match(/asm:(.+)/)
+		if m != nil
+			asm = m[1]
+			r_text=""
+			if asm.include?("\"")
+				r_text = "ざんねんでした"
+			else
+				r_text = %x[rasm2 #{Shellwords.escape(asm)}]
+				if r_text == ""
+					r_text = "error."
+				end
+			end
+			tc.update(("@" + status.user.screen_name + " " + r_text), :in_reply_to_status_id => status.id)
+		end
+	elsif text.include?("@sksat_bot")
+		tc.update(("@" + status.user.screen_name + "呼びましたか？"), :in_reply_to_status_id => status.id)
+	end
+end
+
+stream.userstream
 
 =begin
 TweetStream::Client.new.track('千種夜羽','よはねす','ヨハネス') do |status|

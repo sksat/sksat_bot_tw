@@ -92,34 +92,3 @@ end
 
 stream.userstream
 
-=begin
-TweetStream::Client.new.track('千種夜羽','よはねす','ヨハネス') do |status|
-	next unless status.lang == "ja"
-	puts "#{status.user.screen_name} #{status.text}"
-end
-=end
-
-=begin
-while true do
-	tweet = tc.search("千種夜羽").first
-	if tweet.id != $t_id
-		user = tweet.user
-		puts user.name,tweet.text
-		if user.id != 876273884563030018
-			str = "@sksat_tty "
-			if user.id == 730341017736470528
-				str += "わたしの名前を呼びましたね？\nちなみに" + $yohanesu_num.to_s + "回目ですよ！"
-				$yohanesu_num += 1
-				puts "よはねす"
-			else
-				str += user.name + "(" + user.uri + ")さんが千種夜羽についてツイートしています"
-				puts str
-			end
-			tc.update(str, in_reply_to_status_id: tweet.id)
-		end
-	end
-	$t_id = tweet.id
-	save_yaml
-	sleep 5
-end
-=end

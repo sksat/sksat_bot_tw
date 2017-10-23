@@ -55,7 +55,6 @@ stream.on_event(:follow) do |follow|
 end
 
 stream.on_timeline_status do |status|
-	#puts status.text
 	text = status.text
 	user = status.user
 	next if(text=~/^RT/)
@@ -85,6 +84,35 @@ stream.on_timeline_status do |status|
 			end
 			tc.update(("@" + status.user.screen_name + " " + r_text), :in_reply_to_status_id => status.id)
 		end
+	elsif (((text == "334") || (text == "1333")) || (text == "1640"))
+		msg = ""
+		now = Time.now
+		ts = ((status.id >> 22)+1288834974567)/1000.0
+		hour = 0
+		min  = 0
+		if text == "334"
+			hour = 3
+			min  = 34
+		elsif text == "1333"
+			hour = 13
+			min  = 33
+		elsif text == "1640"
+			hour = 16
+			min  = 40
+		else
+			msg += "error!"
+		end
+		ans = Time.local(now.year, now.month, now.day, hour, min, 0, "JST")
+		p ans
+		#ts = 1508733180 + 1.33333
+		delay = ts - ans.to_i
+		msg += Time.at(ts).strftime("%H:%M:%S.")
+		msg += ((delay - delay.to_i).round(5)*100000).to_i.to_s
+		msg += "\n" + delay.round(5).to_s + "秒遅延"
+		if(delay/60 > 15)
+			msg = "お話になりません"
+		end
+		tc.update(("@"+user.screen_name+" "+msg), :in_reply_to_status_id => status.id)
 	elsif text.include?("@sksat_bot")
 		tc.update(("@" + status.user.screen_name + "呼びましたか？"), :in_reply_to_status_id => status.id)
 	end

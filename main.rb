@@ -59,7 +59,7 @@ stream.on_timeline_status do |status|
 	user = status.user
 	next if(text=~/^RT/)
 	next if(user.id == 876273884563030018)
-	if text.include?("千種夜羽") || text.include?("よはねす") || text.include?("ヨハネス")
+	if text.include?("千種夜羽") || text.include?("よはねす") || text.include?("ヨハネス") || text.include?("yohanesu")
 		msg = "はーい，霞くんと明日葉ちゃんの大好きなお母さん，正義のヨハネスさんですよ〜"
 		if(user.id == 730341017736470528)
 			$yohanesu_num+=1
@@ -111,6 +111,23 @@ stream.on_timeline_status do |status|
 		msg += "\n" + delay.round(5).to_s + "秒遅延"
 		if(delay/60 > 15)
 			msg = "お話になりません"
+		end
+		tc.update(("@"+user.screen_name+" "+msg), :in_reply_to_status_id => status.id)
+	elsif (text.include?("あけまして") || text.include?("あけおめ"))
+		now = Time.now
+		ts = ((status.id >> 22)+1288834974567)/1000.0
+		ans = Time.local(2018, 1, 1, 0, 0, 0, "JST")
+		delay = ts - ans.to_i
+		msg = ""
+		if(delay < 0)
+			msg = "気が早いですね．まだ2017年ですよ．"
+		else
+			msg = "あけましておめでとうございます！\n"
+			msg += Time.at(ts).strftime("%H:%M:%S.")
+			msg += ((delay - delay.to_i).round(5)*100000).to_i.to_s
+			msg += "\n"
+			msg += "2018年になってから"
+			msg += delay.round(5).to_s + "秒経過しました！"
 		end
 		tc.update(("@"+user.screen_name+" "+msg), :in_reply_to_status_id => status.id)
 	elsif text.include?("@sksat_bot")

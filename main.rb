@@ -115,7 +115,7 @@ stream.on_timeline_status do |status|
 		tc.update(("@"+user.screen_name+" "+msg), :in_reply_to_status_id => status.id)
 	elsif (text.include?("あけまして") || text.include?("あけおめ"))
 		now = Time.now
-		ts = ((status.id >> 22)+1288834974567)/1000.0
+		ts = ((status.id >> 22)+1288834974657)/1000.0
 		ans = Time.local(2018, 1, 1, 0, 0, 0, "JST")
 		delay = ts - ans.to_i
 		msg = ""

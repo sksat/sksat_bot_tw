@@ -87,7 +87,7 @@ stream.on_timeline_status do |status|
 	elsif (((text == "334") || (text == "1333")) || (text == "1640"))
 		msg = ""
 		now = Time.now
-		ts = ((status.id >> 22)+1288834974567)/1000.0
+		ts = ((status.id >> 22)+1288834974657)/1000.0
 		hour = 0
 		min  = 0
 		if text == "334"

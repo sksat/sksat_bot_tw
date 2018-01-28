@@ -106,9 +106,8 @@ stream.on_timeline_status do |status|
 		p ans
 		#ts = 1508733180 + 1.33333
 		delay = ts - ans.to_i
-		msg += Time.at(ts).strftime("%H:%M:%S.")
-		msg += ("%05d" % ((delay - delay.to_i).round(5)*100000).to_i).to_s
-		msg += "\n" + delay.round(5).to_s + "秒遅延"
+		msg += Time.at(ts).strftime("%H:%M:%S.%L")
+		msg += "\n" + delay.round(3).to_s + "秒遅延"
 		if(delay/60 > 15)
 			msg = "お話になりません"
 		end

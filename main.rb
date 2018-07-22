@@ -129,8 +129,6 @@ stream.on_timeline_status do |status|
 			msg += delay.round(5).to_s + "秒経過しました！"
 		end
 		tc.update(("@"+user.screen_name+" "+msg), :in_reply_to_status_id => status.id)
-	elsif text.include?("@sksat_bot")
-		tc.update(("@" + status.user.screen_name + "呼びましたか？"), :in_reply_to_status_id => status.id)
 	end
 end
 
